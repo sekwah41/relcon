@@ -1,6 +1,8 @@
 mod config;
+mod git;
 
 use std::env;
+use std::error::Error;
 use std::path::PathBuf;
 use log::LevelFilter;
 use clap::Parser;
@@ -8,17 +10,25 @@ use clap::Parser;
 #[derive(Parser)]
 #[command(version, about)]
 struct Args {
+    /// Project root must contain a relcon.json file and be a git folder
+    /// Defaults to the current directory
     #[arg(long)]
     path: Option<PathBuf>,
 
+    /// Print verbose logs
     #[arg(long)]
     verbose: bool,
 
+    /// Print all logs
     #[arg(long)]
     trace: bool,
+
+    ///
+    #[arg()]
+    release_as: String,
 }
 
-fn main() {
+fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     let args = Args::parse();
 
     let log_level = if args.trace {
@@ -43,13 +53,23 @@ fn main() {
         .canonicalize()
         .unwrap_or_else(|_| working_dir.clone());
 
-    // let gix = gix::open(&working_dir);
     log::info!("Working directory: {}", working_dir.display());
 
-    if let Ok(config) = config::load_from_file(working_dir) {
+    if let Ok(config) = config::load_from_file(&working_dir) {
 
     } else  {
         log::error!("Failed to load config file.");
         std::process::exit(1);
     }
+    // Could use discover(".") if we want recursive finding, but we should be running from the root
+    let repo = gix::open(&working_dir).map_err(|e| {
+        log::error!("Failed to open git directory {}", e);
+        e
+    })?;
+
+    let tag = git::latest_tag(&repo)?;
+
+    let commit_history = git::commit_history(&repo);
+
+    Ok(())
 }

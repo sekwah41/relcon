@@ -21,12 +21,7 @@ Untested changes may be closed or delayed until there is enough confidence that 
 This policy primarily exists as one goal of this tool is that it will be used in CI pipelines, and we want a level of stability and confidence when updating.
 
 ## AI Policy
-We do not outright ban the use of AI tools when contributing. However, contributors are expected to fully understand, review, test, and take responsibility for everything they submit.
+In alignment with Codebase's terms of service, we are outright banning the use of LLM generated code.
+If your pr or issue has a clear indication of it being raised by an LLM, you may be blocked from future contribution.
 
-Pull requests that appear to be AI-generated without proper review, testing, or understanding may be closed without review. Repeated low-quality or careless submissions may result in you being blocked from contributing in the future.
-
-This policy exists because there has been an increasing trend of AI-assisted submissions that add sloppy features, introduce bugs, or create unnecessary maintenance work.
-
-We are not here to review the output of prompts. We are here to build and maintain quality open source software.
-
-Please use your own judgement, check your work carefully, and make sure any code you submit is useful, tested, and of a reasonable standard.
+We are not here to review the output of prompts. We are here to build and maintain quality open-source software.
